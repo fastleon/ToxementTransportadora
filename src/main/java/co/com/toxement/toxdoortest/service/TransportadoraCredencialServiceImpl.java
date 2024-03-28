@@ -3,6 +3,7 @@ package co.com.toxement.toxdoortest.service;
 import co.com.toxement.toxdoortest.entity.TransportadoraCredencial;
 import co.com.toxement.toxdoortest.repository.TransportadoraCredencialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

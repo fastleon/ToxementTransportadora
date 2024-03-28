@@ -8,7 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,7 +21,7 @@ public class SecurityBeansInjector {
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
     @Autowired
-    private TransportadoraCredencialRepository transportadoraCredencialRepository;
+    private TransportadoraCredencialRepository credencialRepository;
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -43,16 +45,12 @@ public class SecurityBeansInjector {
     @Bean
     UserDetailsService userDetailsService() {
         return usuario -> {
-            return transportadoraCredencialRepository.findByUsuario(usuario)
-                    .orElseThrow(()->new RuntimeException("User not Found"));
+            System.out.println("Revisando credenciales para el usuario: "+usuario);
+            return credencialRepository.findByUsuario(usuario)
+                    .orElseThrow(()-> {
+                        return new RuntimeException("User not Found");
+                    });
         };
     }
 
-//    private final static class CustomUserDetailsService implements UserDetailsService {
-//
-//        @Override
-//        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//            return null;
-//        }
-//    }*/
 }

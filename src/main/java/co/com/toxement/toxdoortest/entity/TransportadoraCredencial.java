@@ -98,6 +98,6 @@ public class TransportadoraCredencial implements Serializable, UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return !this.status;
+		return this.status;
 	}
 }

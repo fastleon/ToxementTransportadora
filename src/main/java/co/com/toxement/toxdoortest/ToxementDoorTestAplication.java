@@ -101,7 +101,7 @@ public class ToxementDoorTestAplication {
 	}*/
 
 	//Poblar la tabla credenciales con datos para pruebas
-	@Component
+	/*@Component
 	public class DataLoader implements CommandLineRunner {
 		@Autowired
 		private TransportadoraService transportadoraService;
@@ -146,7 +146,7 @@ public class ToxementDoorTestAplication {
 				System.out.println(e.getMessage());
 			}
 		}
-	}
+	}*/
 
 
 }
