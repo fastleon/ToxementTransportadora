@@ -80,6 +80,14 @@
 			<version>0.12.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!--REST Response igual que IntranetRestServices-->
+		<!-- Import the JAX-RS API, we use provided scope as the API is included
+			in JBoss AS 7 -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.ws.rs</groupId>
+			<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+			<version>1.0.1.Final</version>
+		</dependency>
 
 
 
@@ -108,7 +116,14 @@
 			</exclusions>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>ToxementComunRestServices</groupId>
+            <artifactId>ToxementComunRestServices</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>

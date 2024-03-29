@@ -39,6 +39,7 @@ public class HttpSecurityConfig {
                 .antMatchers("/error").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/productos").hasAuthority(Permisos.READ_ALL_PRODUCTOS.name())
                 .antMatchers(HttpMethod.POST, "/api/v1/productos").hasAuthority(Permisos.SAVE_ONE_PRODUCTO.name())
+                .antMatchers(HttpMethod.POST, "/api/v1/eventos/**").hasAuthority(Permisos.READ_ALL_PRODUCTOS.name())
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
