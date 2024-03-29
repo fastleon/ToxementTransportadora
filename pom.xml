@@ -83,11 +83,17 @@
 		<!--REST Response igual que IntranetRestServices-->
 		<!-- Import the JAX-RS API, we use provided scope as the API is included
 			in JBoss AS 7 -->
-		<dependency>
+		<!--dependency>
 			<groupId>org.jboss.spec.javax.ws.rs</groupId>
 			<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 			<version>1.0.1.Final</version>
+		</dependency-->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1.1</version>
 		</dependency>
+
 
 
 

@@ -64,7 +64,7 @@ public class TransportadoraCredencial implements Serializable, UserDetails {
 	private Long usuarioModificacion;
 
     @OneToOne
-    @JoinColumn(name = "transportadora_id", referencedColumnName = "trs_id")
+    @JoinColumn(name = "ttc_transportadora_id", referencedColumnName = "trs_id")
     private Transportadora transportadora;
 
 	@Override

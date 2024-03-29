@@ -1,16 +1,17 @@
 package co.com.toxement.toxdoortest.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class SolicitudDTO {
@@ -21,9 +22,9 @@ public class SolicitudDTO {
 
     /*fecha del evento*/
     @PastOrPresent
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull
-    private LocalDateTime fecha;
+    private Date fecha;
 
     /*nombre del evento*/
     @NotNull
@@ -31,5 +32,15 @@ public class SolicitudDTO {
 
     /*ubicacion de las evidencias*/
     private Set<String> evidencias;
+
+    @JsonCreator
+    public static SolicitudDTO create(
+            @JsonProperty("evidencias") Set<String> evidencias,
+            @JsonProperty("numeroDeEntrega") String numeroDeEntrega,
+            @JsonProperty("fecha") Date fecha,
+            @JsonProperty("nombre") String nombre
+    ) {
+        return new SolicitudDTO(numeroDeEntrega, fecha, nombre, evidencias);
+    }
 
 }

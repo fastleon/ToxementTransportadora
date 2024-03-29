@@ -29,10 +29,10 @@ public class Solicitud implements Serializable {
     private Date fechaCreacion;
 
     @Column(name="tts_transportadora_id")
-    private Long transportadoraId;
+    private Integer transportadoraId;
 
-    @Column(name="tts_remision")
-    private Long remision;
+    @Column(name="tts_num_entrega")
+    private String numeroEntrega;
 
     @Column(name = "tts_data")
     private String jsonData;
