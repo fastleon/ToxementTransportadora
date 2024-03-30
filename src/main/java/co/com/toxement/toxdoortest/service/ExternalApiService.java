@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,9 +29,8 @@ public class ExternalApiService {
     private RestTemplate restTemplate;
 
     public ResultadoValidacionEventoTransportadoraDTO validarEvento(Evento evento) {
-        ResultadoValidacionEventoTransportadoraDTO responseValidacion;// = new ResultadoValidacionEventoTransportadoraDTO();
 
-        /* // Llamar al endpoint estadoNombre
+        /* // Llamar al endpoint estadoNombre tipo GET
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + ENDPOINT_VALIDAR_EVENTO)
                 .queryParam("idTransportadora", evento.getIdTransportadora())
                 .queryParam("nombre", evento.getNombre())
@@ -42,30 +42,43 @@ public class ExternalApiService {
 
         String urlRequest = BASE_URL + ENDPOINT_PUBLICAR_EVENTO;
 
-        responseValidacion = restTemplate.postForObject(urlRequest, evento, ResultadoValidacionEventoTransportadoraDTO.class);
-        System.out.println("respuesta de validacion: " + responseValidacion.isValidacionExitosa());
+        try {
+            ResultadoValidacionEventoTransportadoraDTO responseValidacion = restTemplate.postForObject(urlRequest, evento, ResultadoValidacionEventoTransportadoraDTO.class);
+            return responseValidacion;
 
-        responseValidacion.setValidacionExitosa(true);
-        return responseValidacion;
+        } catch (HttpStatusCodeException err) {
+            ResultadoValidacionEventoTransportadoraDTO errorValidacion = new ResultadoValidacionEventoTransportadoraDTO();
+            errorValidacion.setEvento(evento);
+            errorValidacion.addError("ERROR_SERVER: " + err.getStatusCode() , err.getResponseBodyAsString());
+            return errorValidacion;
+        }
     }
-     /*@GET
+     /*@POST
         public ResultadoValidacionEventoTransportadoraDTO validarEventoTransportadora
             (idTransportadora, nombre, remision, fecha, evidencias)*/
 
+
+
     public Response publicarEvento(Evento evento) {
         String urlRequest = BASE_URL + ENDPOINT_PUBLICAR_EVENTO;
-        HttpStatus statusCode = restTemplate.postForEntity(urlRequest, null, Void.class).getStatusCode();
-        System.out.println("Respuesta del servicio publicarEvento: " + statusCode.value());
-        if (statusCode.is2xxSuccessful()) {
-            return Response.ok().build();
-        } else {
+
+        try {
+            String responsePublicacion = restTemplate.postForObject(urlRequest, evento, String.class);
             return Response
-                    .status(statusCode.value())
-                    .entity("Falla al publicar en cola la solicitud")
+                    .status(Response.Status.OK.getStatusCode())
+                    .entity(responsePublicacion)
                     .build();
+
+        } catch (HttpStatusCodeException err) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Falla al publicar solicitud, " + err.getStatusCode() + ": " + err.getResponseBodyAsString())
+                    .build();
+
         }
+
     }
-    /*@GET
+    /*@POST
 	public Response publicar(idTransportadora, nombre, remision, fecha, evidencias)
 	 */
 

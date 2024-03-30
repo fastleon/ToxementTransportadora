@@ -6,8 +6,8 @@ import co.com.toxement.toxdoortest.dto.SolicitudDTO;
 import co.com.toxement.toxdoortest.entity.Solicitud;
 import co.com.toxement.toxdoortest.repository.SolicitudRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -43,13 +43,16 @@ public class SolicitudServiceImpl implements SolicitudService{
 
         ResultadoValidacionEventoTransportadoraDTO responseValidacion = externalApiService.validarEvento(evento);
         if (!responseValidacion.isValidacionExitosa()) {
+            System.out.println("Error en la validacion");
             //TODO: Agregar DTO para respuestas al usuario
-            return Optional.of("Error en Validacion");
+            //return Optional.of("Error en Validacion");
+
         }
 
         Response responsePublicacion = externalApiService.publicarEvento(evento);
         if (responsePublicacion.getStatus() != Response.Status.OK.getStatusCode()) {
-            return Optional.of("Error en la publicacion, status: " + responsePublicacion.getStatus());
+            System.out.println("Error en la publicacion");
+            //return Optional.of("Error en la publicacion, status: " + responsePublicacion.getStatus());
         }
 
         //Guardar Solicitud
