@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -33,7 +32,7 @@ public class HttpSecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/auth/**").permitAll()
                 .antMatchers("/error").permitAll()

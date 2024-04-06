@@ -4,7 +4,6 @@ import co.com.toxement.bo.Evento;
 import co.com.toxement.dto.ResultadoValidacionEventoTransportadoraDTO;
 import co.com.toxement.transportadora.config.Constantes;
 import co.com.toxement.transportadora.dto.ErrorUsuarioDTO;
-import co.com.toxement.transportadora.dto.RespuestaSolicitudDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,9 +27,6 @@ public class ExternalApiService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
-    private RespuestaSolicitudDTO rtaUsuario;
 
     public ResponseEntity<ResultadoValidacionEventoTransportadoraDTO> validarEvento(Evento evento) {
 

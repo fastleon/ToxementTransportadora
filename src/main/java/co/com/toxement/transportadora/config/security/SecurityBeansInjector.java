@@ -22,7 +22,7 @@ public class SecurityBeansInjector {
     private TransportadoraCredencialRepository credencialRepository;
 
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
+    AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager(); //Provider Manager
     }
 
@@ -36,7 +36,7 @@ public class SecurityBeansInjector {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

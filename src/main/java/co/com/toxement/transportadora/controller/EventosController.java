@@ -29,7 +29,7 @@ public class EventosController {
     TransportadoraCredencialRepository credencialRepository;
 
     @PostMapping("/registrarEvento") //@RequestBody @Valid SolicitudDTO solicitudDTO,
-    public ResponseEntity registrarEvento(Principal principal, @RequestBody JsonNode json) {
+    public ResponseEntity<RespuestaSolicitudDTO> registrarEvento(Principal principal, @RequestBody JsonNode json) {
 
         ObjectMapper objectMapper = new ObjectMapper();
         SolicitudDTO solicitudDTO;

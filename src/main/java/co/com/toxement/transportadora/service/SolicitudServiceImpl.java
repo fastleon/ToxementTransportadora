@@ -28,7 +28,7 @@ public class SolicitudServiceImpl implements SolicitudService{
     ExternalApiService externalApiService;
 
     @Override
-    public ResponseEntity validarSolicitud(SolicitudDTO solicitudDTO, Integer idTransportadora, JsonNode json) {
+    public ResponseEntity<RespuestaSolicitudDTO> validarSolicitud(SolicitudDTO solicitudDTO, Integer idTransportadora, JsonNode json) {
 
         //Validar Solicitud
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
