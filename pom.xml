@@ -10,18 +10,57 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>co.com.toxdoortest</groupId>
-	<artifactId>ToxdoorTest</artifactId>
+	<groupId>co.com.toxement.transportadora</groupId>
+	<artifactId>ToxementTransportadora</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>Servicios Token Project</name>
-	<description>API con token door para Toxement - TEST</description>
+	<name>Servicios Token ToxementTransportadora</name>
+	<description>API con token jwt para Toxement - transportadoras</description>
 
+	<!--properties> TOMCAT
+		<java.version>1.8</java.version>
+	</properties-->
 	<properties>
 		<java.version>1.8</java.version>
+		<jboss.home>${env.JBOSS_HOME}</jboss.home>
+		<version.javaee.specs.api>1.0.0.Final</version.javaee.specs.api>
+		<version.javaee.specs.api.1>1.0.1.Final</version.javaee.specs.api.1>
+		<!-- Specify the JBoss AS directory to be the JBOSS_HOME environment variable -->
+		<jboss.home>${env.JBOSS_HOME}</jboss.home>
+		<extval.version>2.0.7</extval.version>
 	</properties>
+	<!--properties> Springboot configura este parametro en application.properties
+		<date.format>yyyy-MM-dd HH:mm:ss</date.format>
+	</properties-->
 
+	<!--dependencyManagement>
+		<dependencies-->
+		<!-- EAP 7.2 BOM-->
+			<!--dependency>
+				<groupId>org.jboss.bom</groupId>
+				<artifactId>eap-runtime-artifacts</artifactId>
+				<version>7.2.0.GA</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<exclusions-->
+			        <!--Excluir Hibernate ->
+			        <exclusion>
+			            <groupId>org.hibernate</groupId>
+			            <artifactId>hibernate-entitymanager</artifactId>
+			        </exclusion>
+			    </exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement-->
+	
 	<dependencies>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -30,9 +69,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+		        <!-- exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion -->
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -42,26 +92,25 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.3</version>
+			<scope>runtime</scope>
 		</dependency>
 		<!--LOMBOK-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!--TOMCAT, revisar al usar JBOSS-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<!--Security TEST-->
+		<!--dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency-->
 		<!--JJWT TOKENs-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -83,12 +132,31 @@
 		<!--REST Response igual que IntranetRestServices-->
 		<!-- Import the JAX-RS API, we use provided scope as the API is included
 			in JBoss AS 7 -->
-		<!--dependency>
+		<dependency>
 			<groupId>org.jboss.spec.javax.ws.rs</groupId>
 			<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 			<version>1.0.1.Final</version>
-		</dependency-->
+		</dependency>
+		<!-- JBOSS -->
 		<dependency>
+		    <groupId>org.jboss.spec.javax.annotation</groupId>
+		    <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+		    <version>${version.javaee.specs.api}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jboss.spec.javax.ws.rs</groupId>
+		    <artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+		    <version>${version.javaee.specs.api}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jboss.spec.javax.ejb</groupId>
+		    <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+		    <version>${version.javaee.specs.api.1}</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<!-- TOMCA -->
+		<!--dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.1.1</version>
@@ -97,7 +165,7 @@
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
 			<version>2.36</version>
-		</dependency>
+		</dependency-->
 
 
 
@@ -141,16 +209,32 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!--executions>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+				<executions>
 					<execution>
 						<goals>
 							<goal>repackage</goal>
 						</goals>
 					</execution>
-				</executions-->
+				</executions>
 				<!--configuration>
                     <warName>otro_nombre</warName>
                 </configuration-->
+			</plugin>
+			<!-- The JBoss AS plugin deploys your war to a local JBoss AS container -->
+			<!-- To use, set the JBOSS_HOME environment variable and run: mvn package 
+				jboss-as:deploy -->
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>7.0.2.Final</version>
 			</plugin>
 		</plugins>
 	</build>
