@@ -1,0 +1,16 @@
+spring.application.name=toxement-door
+# Formato de fecha
+date: format: "yyyy-MM-dd HH:mm:ss"
+#Datasource Cambiar algunDS por el real
+spring.datasource.jndi-name=java:jboss/datasources/algunDS      
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+
+# Configuracion de JWT (GeneradoAleatoriamente)
+security.jwt.token-expiration-minutes=5
+security.jwt.token-key=cambiarPorKEYUsadaEnProduccion 
+
+#Configuracion de API Intranet -> Cambiar por reales en produccion
+external-api-base-url=http://192.168.50:38080/IntranetRestServices/TMS
+external-api-validar-endpoint=/validarEvento
+external-api-publicar-endpoint=/publicarEvento

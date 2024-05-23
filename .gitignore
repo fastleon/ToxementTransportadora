@@ -35,3 +35,4 @@ build/
 
 #Configuracion
 src/main/resources/application.properties
+application.properties
