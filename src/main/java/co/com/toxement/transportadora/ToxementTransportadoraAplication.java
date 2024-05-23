@@ -1,9 +1,11 @@
 package co.com.toxement.transportadora;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 @SpringBootApplication(scanBasePackages = "co.com.toxement.transportadora")
 public class ToxementTransportadoraAplication {
@@ -118,7 +120,7 @@ public class ToxementTransportadoraAplication {
 			}
 		}*/
 
-	/*
+
 		//GENERA LA CLAVE DE USUARIO CON EL ENCRIPTAMIENTO USADO EN ESTA API -> (no es el token)
 		@Component
 		public class DataLoader implements CommandLineRunner {
@@ -127,13 +129,15 @@ public class ToxementTransportadoraAplication {
 			@Override
 			public void run(String... args) throws Exception {
 				try {
-					System.out.println(passwordEncoder.encode("admin"));
+					System.out.println(passwordEncoder.encode("Customer1"));
+					System.out.println(passwordEncoder.encode("Customer2"));
+					System.out.println(passwordEncoder.encode("administrator"));
 				} catch (Exception e){
 					System.out.println(e.getMessage());
 				}
 
 		}
 
-	} */
+	}
 
 }

@@ -1,22 +1,24 @@
 package co.com.toxement.transportadora.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import javax.ws.rs.core.Response;
+import java.util.Date;
+
 import co.com.toxement.bo.Evento;
 import co.com.toxement.dto.ErrorDTO;
 import co.com.toxement.dto.ResultadoValidacionEventoTransportadoraDTO;
+
 import co.com.toxement.transportadora.config.Constantes;
 import co.com.toxement.transportadora.dto.RespuestaSolicitudDTO;
 import co.com.toxement.transportadora.dto.SolicitudDTO;
 import co.com.toxement.transportadora.entity.Solicitud;
 import co.com.toxement.transportadora.repository.SolicitudRepository;
 import co.com.toxement.transportadora.util.Conversion;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
-import java.util.Date;
 
 @Service
 public class SolicitudServiceImpl implements SolicitudService{
@@ -49,6 +51,7 @@ public class SolicitudServiceImpl implements SolicitudService{
         RespuestaSolicitudDTO respuestaSolicitud = new RespuestaSolicitudDTO();
         respuestaSolicitud.setSolicitud(solicitudDTO);
 
+        //Validar Evento
         ResponseEntity<ResultadoValidacionEventoTransportadoraDTO> responseValidacion = externalApiService.validarEvento(evento);
         if (responseValidacion.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
             respuestaSolicitud.addError(
@@ -65,13 +68,7 @@ public class SolicitudServiceImpl implements SolicitudService{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuestaSolicitud);
         }
 
-        //TODO: Habilitar esta sección cuando Norbert termine de implementarlo
-        /*Response responsePublicacion = externalApiService.publicarEvento(evento);
-        if (responsePublicacion.getStatus() != Response.Status.OK.getStatusCode()) {
-            System.out.println("Error en la publicacion");
-            respuestaSolicitud.addError(Constantes.ERROR_CONSUMO_ERROR_PUBLICACION, HttpStatus.INTERNAL_SERVER_ERROR);
-        }*/
-
+        //Si validarEvento fue exitoso crear Solicitud y generar Radicado
         if ( respuestaSolicitud.isExitosa() ) {
             //Guardar Solicitud
             Solicitud solicitud = new Solicitud();
@@ -79,16 +76,32 @@ public class SolicitudServiceImpl implements SolicitudService{
             solicitud.setTransportadoraId(idTransportadora);
             solicitud.setNumeroEntrega(solicitudDTO.getNumeroDeEntrega());
             solicitud.setJsonData(json.toString());
+            solicitud.setStatus(true);
             Solicitud solicitudGuardada = solicitudRepository.save(solicitud);
-            if (solicitudGuardada.getId() != null) {
-                System.out.println("Solicitud guardada ID: " + solicitudGuardada.getId());
-                respuestaSolicitud.setRadicado(solicitudGuardada.getId().toString());
-            } else {
-                respuestaSolicitud.addError(Constantes.ERROR_CONSUMO_ERROR_RADICADO, HttpStatus.ACCEPTED);
+            if (solicitudGuardada.getId() == null) {
+                System.out.println("Error tratando de guardar solicitud en base de datos");
+                respuestaSolicitud.addError(Constantes.ERROR_CONSUMO_ERROR_DATABASE, HttpStatus.INTERNAL_SERVER_ERROR);
+                return ResponseEntity.status(respuestaSolicitud.getHttpStatus()).body(respuestaSolicitud);
             }
+            System.out.println("Solicitud guardada ID: " + solicitudGuardada.getId());
+            respuestaSolicitud.setRadicado(solicitudGuardada.getId().toString());
+            evento.setNumeroRadicado(solicitudGuardada.getId());
         }
 
-        //TODOS LOS PROCESOS FUERON EFECTUADOS POSITIVAMENTE
+        //Publicar Evento
+        Response responsePublicacion = externalApiService.publicarEvento(evento);
+        if (responsePublicacion.getStatus() == Response.Status.OK.getStatusCode()) {
+            Solicitud solicitudActual = solicitudRepository.findById(evento.getNumeroRadicado()).orElse(null);
+            if (solicitudActual == null) {
+                System.out.println("Error tratando de editar la base de datos, #Radicado: " + evento.getNumeroRadicado().toString());
+                respuestaSolicitud.addError(Constantes.ERROR_CONSUMO_ERROR_DATABASE, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            solicitudActual.setPublicado(true);
+            solicitudRepository.save(solicitudActual);
+        } else {
+            System.out.println("Error en la publicación, #Radicado: " + evento.getNumeroRadicado().toString());
+            respuestaSolicitud.addError(Constantes.ERROR_CONSUMO_ERROR_PUBLICACION, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.status(respuestaSolicitud.getHttpStatus()).body(respuestaSolicitud);
 
     }

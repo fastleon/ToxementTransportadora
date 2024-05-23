@@ -34,6 +34,15 @@ public class Solicitud implements Serializable {
     @Column(name="tts_num_entrega")
     private String numeroEntrega;
 
+    @Column(name="tts_publicado")
+    private boolean isPublicado;
+
+    @Column(name="tts_procesado")
+    private boolean isProcesado;
+    
+    @Column(name="tts_status")
+    private boolean status;
+    
     @Lob
     @Column(name = "tts_data", columnDefinition = "VARCHAR(4000)")
     private String jsonData;

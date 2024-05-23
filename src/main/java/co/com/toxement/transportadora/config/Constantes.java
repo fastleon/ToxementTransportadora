@@ -29,4 +29,7 @@ public class Constantes {
             new ErrorUsuarioDTO("253", "Error en la estructura del json recibido o falta algún parámetro.");
     public static final ErrorUsuarioDTO ERROR_CONSUMO_ERROR_SERVIDOR =
             new ErrorUsuarioDTO("254", "No es posible registrar el evento en el sistema, consulte al administrador del sistema.");
+    public static final ErrorUsuarioDTO ERROR_CONSUMO_ERROR_DATABASE =
+            new ErrorUsuarioDTO("255", "No es posible generar el numero de radicado por fallas en base de datos, consulte al administrador del sistema.");
+    
 }
